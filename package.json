@@ -1,8 +1,11 @@
 {
-  "name": "timecamp-api",
-  "version": "1.0.0",
+  "name": "timecamp-v2-javascript-client",
+  "version": "0.0.1",
   "description": "TimeCamp API",
-  "repository": {},
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/timecamp/timecamp-v2-javascript-client"
+  },
   "main": "dist/timecamp-api.main.js",
   "scripts": {
     "prebuild": "npm run build:clean ###&& npm run test",
