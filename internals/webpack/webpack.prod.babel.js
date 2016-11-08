@@ -6,7 +6,6 @@ module.exports = require('./webpack.base.babel')({
     // In production, we skip all hot-reloading stuff
     entry: [
         'babel-regenerator-runtime',
-
         path.join(process.cwd(), 'lib/index.js'),
     ],
 
@@ -14,8 +13,8 @@ module.exports = require('./webpack.base.babel')({
     output: {
         path: "dist",
         filename: "timecamp-api.[name].js",
-        library: ["timecamp-api", "[name]"],
-        libraryTarget: "umd"
+        library: "TimeCampApi",
+        libraryTarget: "var"
     },
     devtool: 'source-map',
     plugins: [],
