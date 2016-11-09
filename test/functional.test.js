@@ -24,18 +24,6 @@ describe('TimeCamp', () => {
         const username = Utils.generateRandomEmail();
         const password = Utils.TEST_PASSWORD;
 
-
-
-        it('works', async function() {
-            const apiResponse = await timecampApi.firstTest(username, password);
-            // if (!apiResponse.error) {
-            //
-            //     // TODO: Check if response.data fields are correct
-            // } else {
-            //     throw new Error(apiResponse.error.errorMessage);
-            // }
-        }).timeout(10000);
-
         // it('can register a new user', async function () {
         //     const apiResponse = await timecampApi.userRegister(username, password);
         //
@@ -48,14 +36,8 @@ describe('TimeCamp', () => {
         // }).timeout(10000);
         //
         describe('user', () => {
-
-            let user;
-
-            let newTimerId;
-
                 it('start timer', async function () {
                     const apiResponse = await timecampApi.user.timerStart();
-                    newTimerId = apiResponse.data.new_timer_id;
                     if (!apiResponse.error) {
                         // TODO: Check if response.data fields are correct
                     } else {
@@ -75,7 +57,6 @@ describe('TimeCamp', () => {
         });
 
         describe('time entries', () => {
-
             let newEntryId;
 
             it('get entries', async function () {
@@ -89,7 +70,6 @@ describe('TimeCamp', () => {
 
             it('add new entry', async function () {
                 const apiResponse = await timecampApi.entry.add('2015-06-06', 3600);
-                console.log(apiResponse);
                 newEntryId = apiResponse.data.entry_id;
                 if (!apiResponse.error) {
                     // TODO: Check if response.data fields are correct
@@ -99,8 +79,41 @@ describe('TimeCamp', () => {
             }).timeout(10000);
 
             it('edit existing entry', async function () {
-                const apiResponse = await timecampApi.entry.update(23, {note: 'lol'}); //newEntryId
-                console.log(apiResponse);
+                const apiResponse = await timecampApi.entry.edit(newEntryId, {note: 'lol'}); //newEntryId
+                if (!apiResponse.error) {
+                    // TODO: Check if response.data fields are correct
+                } else {
+                    throw new Error(apiResponse.error.errorMessage);
+                }
+            }).timeout(10000);
+        });
+
+        describe('tasks', () => {
+            let newTaskId;
+
+            it('get tasks', async function () {
+                const apiResponse = await timecampApi.task.get();
+                if (!apiResponse.error) {
+                    // TODO: Check if response.data fields are correct
+                } else {
+                    throw new Error(apiResponse.error.errorMessage);
+                }
+            }).timeout(10000);
+
+            it('add new task', async function () {
+                const apiResponse = await timecampApi.task.add('nameMeME', {note: 'lol'});
+                newTaskId = Object.keys(apiResponse.data)[0];
+                if (!apiResponse.error) {
+                    // TODO: Check if response.data fields are correct
+                } else {
+                    throw new Error(apiResponse.error.errorMessage);
+                }
+            }).timeout(10000);
+
+            it('edit existing task', async function () {
+                console.log(newTaskId);
+
+                const apiResponse = await timecampApi.task.edit(newTaskId, {note: 'trololo'}); //newEntryId
                 if (!apiResponse.error) {
                     // TODO: Check if response.data fields are correct
                 } else {
