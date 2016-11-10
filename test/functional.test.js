@@ -60,7 +60,7 @@ describe('TimeCamp', () => {
             let newEntryId;
 
             it('get entries', async function () {
-                const apiResponse = await timecampApi.entry.get('2015-06-05', '2015-07-07', {user_ids: '100118', blebel:34});
+                const apiResponse = await timecampApi.timeEntry.get('2015-06-05', '2015-07-07', {user_ids: '100118', blebel:34});
                 if (!apiResponse.error) {
                     // TODO: Check if response.data fields are correct
                 } else {
@@ -69,8 +69,8 @@ describe('TimeCamp', () => {
             }).timeout(10000);
 
             it('add new entry', async function () {
-                const apiResponse = await timecampApi.entry.add('2015-06-06', 3600);
-                newEntryId = apiResponse.data.entry_id;
+                const apiResponse = await timecampApi.timeEntry.add('2015-06-06', 3600);
+                newEntryId = apiResponse.data.timeEntry_id;
                 if (!apiResponse.error) {
                     // TODO: Check if response.data fields are correct
                 } else {
@@ -79,7 +79,7 @@ describe('TimeCamp', () => {
             }).timeout(10000);
 
             it('edit existing entry', async function () {
-                const apiResponse = await timecampApi.entry.edit(newEntryId, {note: 'lol'}); //newEntryId
+                const apiResponse = await timecampApi.timeEntry.edit(newEntryId, {note: 'lol'}); //newEntryId
                 if (!apiResponse.error) {
                     // TODO: Check if response.data fields are correct
                 } else {
