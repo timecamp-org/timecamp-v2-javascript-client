@@ -1,6 +1,7 @@
 import expect from 'expect';
 
 import TimeCampApi from '../lib';
+import PouchDB from 'pouchdb'
 
 import * as Utils from './utils';
 
@@ -14,12 +15,15 @@ describe('TimeCamp', () => {
     describe('REST API', () => {
         it('exists', () => {
             timecampApi = new TimeCampApi(
-                'c8c0c7ffec2a68b70b1886bd8f',
+                '75c4eb87c870cab5f242a866bb',
                 'http://localhost:8080/third_party/api',
-                true);
+                true,
+                PouchDB);
 
             expect(true).toEqual(true);
         });
+
+    });
 
         const username = Utils.generateRandomEmail();
         const password = Utils.TEST_PASSWORD;
@@ -52,15 +56,15 @@ describe('TimeCamp', () => {
                     } else {
                         throw new Error(apiResponse.error.errorMessage);
                     }
-                }).timeout(10000);
 
+                }).timeout(10000);
         });
 
         describe('time entries', () => {
             let newEntryId;
 
             it('get entries', async function () {
-                const apiResponse = await timecampApi.timeEntry.get('2015-06-05', '2015-07-07', {user_ids: '100118', blebel:34});
+                const apiResponse = await timecampApi.entry.get('2015-06-05', '2015-07-07', {user_ids: '100118', blebel:34});
                 if (!apiResponse.error) {
                     // TODO: Check if response.data fields are correct
                 } else {
@@ -69,8 +73,8 @@ describe('TimeCamp', () => {
             }).timeout(10000);
 
             it('add new entry', async function () {
-                const apiResponse = await timecampApi.timeEntry.add('2015-06-06', 3600);
-                newEntryId = apiResponse.data.timeEntry_id;
+                const apiResponse = await timecampApi.entry.add('2015-06-06', 3600);
+                newEntryId = apiResponse.data.entry_id;
                 if (!apiResponse.error) {
                     // TODO: Check if response.data fields are correct
                 } else {
@@ -79,7 +83,7 @@ describe('TimeCamp', () => {
             }).timeout(10000);
 
             it('edit existing entry', async function () {
-                const apiResponse = await timecampApi.timeEntry.edit(newEntryId, {note: 'lol'}); //newEntryId
+                const apiResponse = await timecampApi.entry.edit(newEntryId, {note: 'lol'}); //newEntryId
                 if (!apiResponse.error) {
                     // TODO: Check if response.data fields are correct
                 } else {
@@ -121,5 +125,4 @@ describe('TimeCamp', () => {
                 }
             }).timeout(10000);
         });
-    });
-});
+  });
