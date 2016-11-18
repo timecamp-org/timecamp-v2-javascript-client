@@ -14,53 +14,83 @@ describe('TimeCamp', () => {
     describe('REST API', () => {
         it('exists', () => {
             timecampApi = new TimeCampApi(
-                'c8c0c7ffec2a68b70b1886bd8f',
-                'http://localhost:8080/third_party/api',
+                'apiToken',
+                'http://localhost:8080',
                 true);
 
             expect(true).toEqual(true);
         });
 
-        const username = Utils.generateRandomEmail();
+        const email = Utils.generateRandomEmail();
         const password = Utils.TEST_PASSWORD;
 
-        // it('can register a new user', async function () {
-        //     const apiResponse = await timecampApi.userRegister(username, password);
-        //
-        //     if (!apiResponse.error) {
-        //
-        //         // TODO: Check if response.data fields are correct
-        //     } else {
-        //         throw new Error(apiResponse.error.errorMessage);
-        //     }
-        // }).timeout(10000);
-        //
+        it('register new user', async function () {
+            const apiResponse = await timecampApi.userRegister(email, password);
+            if (!apiResponse.error) {
+                // TODO: Check if response.data fields are correct
+            } else {
+                throw new Error(apiResponse.error.errorMessage);
+            }
+        }).timeout(100000);
+
+        it('reset user password', async function () {
+            const apiResponse = await timecampApi.userResetPassword(email);
+            if (!apiResponse.error) {
+                // TODO: Check if response.data fields are correct
+            } else {
+                throw new Error(apiResponse.error.errorMessage);
+            }
+        }).timeout(100000);
+
+        it('get user token', async function () {
+            const apiResponse = await timecampApi.userGetToken(email, password);
+            if (!apiResponse.error) {
+                // TODO: Check if response.data fields are correct
+            } else {
+                throw new Error(apiResponse.error.errorMessage);
+            }
+
+            timecampApi.setToken(apiResponse.data.token);
+        }).timeout(10000);
+
+        let currentUser;
+
         describe('user', () => {
-                it('start timer', async function () {
-                    const apiResponse = await timecampApi.user.timerStart();
-                    if (!apiResponse.error) {
-                        // TODO: Check if response.data fields are correct
-                    } else {
-                        throw new Error(apiResponse.error.errorMessage);
-                    }
-                }).timeout(10000);
+            it('get info about current user', async function () {
+                const apiResponse = await timecampApi.user.me();
+                if (!apiResponse.error) {
+                    // TODO: Check if response.data fields are correct
+                } else {
+                    throw new Error(apiResponse.error.errorMessage);
+                }
 
-                it('stop timer', async function () {
-                    const apiResponse = await timecampApi.user.timerStop();
-                    if (!apiResponse.error) {
-                        // TODO: Check if response.data fields are correct
-                    } else {
-                        throw new Error(apiResponse.error.errorMessage);
-                    }
-                }).timeout(10000);
+                currentUser = apiResponse.data;
+            }).timeout(10000);
 
+            it('start timer', async function () {
+                const apiResponse = await timecampApi.user.timerStart();
+                if (!apiResponse.error) {
+                    // TODO: Check if response.data fields are correct
+                } else {
+                    throw new Error(apiResponse.error.errorMessage);
+                }
+            }).timeout(10000);
+
+            it('stop timer', async function () {
+                const apiResponse = await timecampApi.user.timerStop();
+                if (!apiResponse.error) {
+                    // TODO: Check if response.data fields are correct
+                } else {
+                    throw new Error(apiResponse.error.errorMessage);
+                }
+            }).timeout(10000);
         });
 
         describe('time entries', () => {
             let newEntryId;
 
             it('get entries', async function () {
-                const apiResponse = await timecampApi.entry.get('2015-06-05', '2015-07-07', {user_ids: '100118', blebel:34});
+                const apiResponse = await timecampApi.entry.get('2015-06-05', '2015-07-07');
                 if (!apiResponse.error) {
                     // TODO: Check if response.data fields are correct
                 } else {
@@ -79,7 +109,7 @@ describe('TimeCamp', () => {
             }).timeout(10000);
 
             it('edit existing entry', async function () {
-                const apiResponse = await timecampApi.entry.edit(newEntryId, {note: 'lol'}); //newEntryId
+                const apiResponse = await timecampApi.entry.edit(newEntryId, {note: 'lol'});
                 if (!apiResponse.error) {
                     // TODO: Check if response.data fields are correct
                 } else {
@@ -91,15 +121,6 @@ describe('TimeCamp', () => {
         describe('tasks', () => {
             let newTaskId;
 
-            it('get tasks', async function () {
-                const apiResponse = await timecampApi.task.get();
-                if (!apiResponse.error) {
-                    // TODO: Check if response.data fields are correct
-                } else {
-                    throw new Error(apiResponse.error.errorMessage);
-                }
-            }).timeout(10000);
-
             it('add new task', async function () {
                 const apiResponse = await timecampApi.task.add('nameMeME', {note: 'lol'});
                 newTaskId = Object.keys(apiResponse.data)[0];
@@ -110,10 +131,17 @@ describe('TimeCamp', () => {
                 }
             }).timeout(10000);
 
-            it('edit existing task', async function () {
-                console.log(newTaskId);
+            it('get tasks', async function () {
+                const apiResponse = await timecampApi.task.get();
+                if (!apiResponse.error) {
+                    // TODO: Check if response.data fields are correct
+                } else {
+                    throw new Error(apiResponse.error.errorMessage);
+                }
+            }).timeout(10000);
 
-                const apiResponse = await timecampApi.task.edit(newTaskId, {note: 'trololo'}); //newEntryId
+            it('edit existing task', async function () {
+                const apiResponse = await timecampApi.task.edit(newTaskId, {note: 'trololo'});
                 if (!apiResponse.error) {
                     // TODO: Check if response.data fields are correct
                 } else {
