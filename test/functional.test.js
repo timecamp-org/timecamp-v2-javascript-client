@@ -116,6 +116,16 @@ describe('TimeCamp', () => {
                     throw new Error(apiResponse.error.errorMessage);
                 }
             }).timeout(10000);
+
+            it('delete entry', async function () {
+                const apiResponse = await timecampApi.entry.delete(newEntryId);
+                if (!apiResponse.error) {
+                  // TODO: Check if response.data fields are correct
+                }
+                else {
+                  throw new Error(apiResponse.error.errorMessage);
+                }
+            }).timeout(10000);
         });
 
         describe('tasks', () => {
