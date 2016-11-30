@@ -159,5 +159,39 @@ describe('TimeCamp', () => {
                 }
             }).timeout(10000);
         });
+
+        describe('tasks mobile', () => {
+            let newTaskId;
+
+            it('add new task', async function () {
+                const apiResponse = await timecampApi.taskMobile.add('nameMeME', {note: 'lol'});
+                newTaskId = Object.keys(apiResponse.data)[0];
+                if (!apiResponse.error) {
+                    // TODO: Check if response.data fields are correct
+                } else {
+                    throw new Error(apiResponse.error.errorMessage);
+                }
+            }).timeout(10000);
+
+            it('get tasks', async function () {
+                const apiResponse = await timecampApi.taskMobile.get();
+                if (!apiResponse.error) {
+                    // TODO: Check if response.data fields are correct
+                } else {
+                    throw new Error(apiResponse.error.errorMessage);
+                }
+            }).timeout(10000);
+
+            // it('edit existing task', async function () {
+            //     const apiResponse = await timecampApi.taskMobile.edit(newTaskId, currentUser.user_id, {note: 'trololo'});
+            //     console.log(apiResponse)
+            //     // if (!apiResponse.error) {
+            //     //     // TODO: Check if response.data fields are correct
+            //     // } else {
+            //     //     throw new Error(apiResponse.error.errorMessage);
+            //     // }
+            // }).timeout(10000);
+        });
+
     });
 });
