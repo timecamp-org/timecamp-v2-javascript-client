@@ -17,7 +17,8 @@ describe('TimeCamp', () => {
             timecampApi = new TimeCampApi(
                 'apiToken',
                 'http://localhost:8080',
-                true);
+                true,
+                PouchDB);
 
             expect(true).toEqual(true);
         });
