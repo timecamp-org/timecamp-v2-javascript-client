@@ -206,7 +206,7 @@ describe('TimeCamp', () => {
             }).timeout(10000);
 
             it('resend cached requests', async function () {
-                console.log(await timecampApi.apiCacheRequest.sendAllCachedRequests());
+                await timecampApi.apiCacheRequest.sendAllCachedRequests();
             }).timeout(10000);
         });
 
