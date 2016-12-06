@@ -1,6 +1,7 @@
 import expect from 'expect';
 
 import TimeCampApi from '../lib';
+import PouchDB from 'pouchdb'
 
 import * as Utils from './utils';
 
@@ -16,10 +17,12 @@ describe('TimeCamp', () => {
             timecampApi = new TimeCampApi(
                 'apiToken',
                 'http://localhost:8080',
-                true);
+                true,
+                PouchDB);
 
             expect(true).toEqual(true);
         });
+
 
         const email = Utils.generateRandomEmail();
         const password = Utils.TEST_PASSWORD;
@@ -66,9 +69,20 @@ describe('TimeCamp', () => {
 
                 currentUser = apiResponse.data;
             }).timeout(10000);
+        });
 
+        describe('timer', () => {
             it('start timer', async function () {
-                const apiResponse = await timecampApi.user.timerStart();
+                const apiResponse = await timecampApi.timer.start();
+                if (!apiResponse.error) {
+                    // TODO: Check if response.data fields are correct
+                } else {
+                    throw new Error(apiResponse.error.errorMessage);
+                }
+            }).timeout(10000);
+
+            it('check timer status', async function () {
+                const apiResponse = await timecampApi.timer.status();
                 if (!apiResponse.error) {
                     // TODO: Check if response.data fields are correct
                 } else {
@@ -77,7 +91,7 @@ describe('TimeCamp', () => {
             }).timeout(10000);
 
             it('stop timer', async function () {
-                const apiResponse = await timecampApi.user.timerStop();
+                const apiResponse = await timecampApi.timer.stop();
                 if (!apiResponse.error) {
                     // TODO: Check if response.data fields are correct
                 } else {
@@ -86,11 +100,14 @@ describe('TimeCamp', () => {
             }).timeout(10000);
         });
 
+        // timecampApi.apiCacheRequest.showAllCachedRequests();
+
+
         describe('time entries', () => {
             let newEntryId;
 
-            it('get entries', async function () {
-                const apiResponse = await timecampApi.entry.get('2015-06-05', '2015-07-07');
+            it('get time entries', async function () {
+                const apiResponse = await timecampApi.timeEntry.get('2015-06-05', '2015-07-07');
                 if (!apiResponse.error) {
                     // TODO: Check if response.data fields are correct
                 } else {
@@ -98,8 +115,8 @@ describe('TimeCamp', () => {
                 }
             }).timeout(10000);
 
-            it('add new entry', async function () {
-                const apiResponse = await timecampApi.entry.add('2015-06-06', 3600);
+            it('add new time entry', async function () {
+                const apiResponse = await timecampApi.timeEntry.add('2015-06-06', 3600);
                 newEntryId = apiResponse.data.entry_id;
                 if (!apiResponse.error) {
                     // TODO: Check if response.data fields are correct
@@ -108,12 +125,22 @@ describe('TimeCamp', () => {
                 }
             }).timeout(10000);
 
-            it('edit existing entry', async function () {
-                const apiResponse = await timecampApi.entry.edit(newEntryId, {note: 'lol'});
+            it('edit existing time entry', async function () {
+                const apiResponse = await timecampApi.timeEntry.edit(newEntryId, {note: 'lol'});
                 if (!apiResponse.error) {
                     // TODO: Check if response.data fields are correct
                 } else {
                     throw new Error(apiResponse.error.errorMessage);
+                }
+            }).timeout(10000);
+
+            it('delete time entry', async function () {
+                const apiResponse = await timecampApi.timeEntry.delete(newEntryId);
+                if (!apiResponse.error) {
+                  // TODO: Check if response.data fields are correct
+                }
+                else {
+                  throw new Error(apiResponse.error.errorMessage);
                 }
             }).timeout(10000);
         });
@@ -149,5 +176,50 @@ describe('TimeCamp', () => {
                 }
             }).timeout(10000);
         });
+
+        describe('tasks mobile', () => {
+            let newTaskId;
+
+            it('add new task', async function () {
+                const apiResponse = await timecampApi.taskMobile.add('nameMeME', {note: 'lol'});
+                newTaskId = Object.keys(apiResponse.data)[0];
+                if (!apiResponse.error) {
+                    // TODO: Check if response.data fields are correct
+                } else {
+                    throw new Error(apiResponse.error.errorMessage);
+                }
+            }).timeout(10000);
+
+            it('get tasks', async function () {
+                const apiResponse = await timecampApi.taskMobile.get();
+                if (!apiResponse.error) {
+                    // TODO: Check if response.data fields are correct
+                } else {
+                    throw new Error(apiResponse.error.errorMessage);
+                }
+            }).timeout(10000);
+
+            // it('edit existing task', async function () {
+            //     const apiResponse = await timecampApi.taskMobile.edit(newTaskId, currentUser.user_id, {note: 'trololo'});
+            //     console.log(apiResponse)
+            //     // if (!apiResponse.error) {
+            //     //     // TODO: Check if response.data fields are correct
+            //     // } else {
+            //     //     throw new Error(apiResponse.error.errorMessage);
+            //     // }
+            // }).timeout(10000);
+        });
+
+        describe('cache requests', () => {
+            it('list cached requests', async function () {
+                await timecampApi.apiCacheRequest.showAllCachedRequests();
+            }).timeout(10000);
+
+            it('resend cached requests', async function () {
+                await timecampApi.apiCacheRequest.sendAllCachedRequests();
+            }).timeout(10000);
+        });
+
+
     });
 });
