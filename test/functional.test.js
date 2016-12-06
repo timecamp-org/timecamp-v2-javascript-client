@@ -1,6 +1,7 @@
 import expect from 'expect';
 
 import TimeCampApi from '../lib';
+import PouchDB from 'pouchdb'
 
 import * as Utils from './utils';
 
@@ -16,10 +17,12 @@ describe('TimeCamp', () => {
             timecampApi = new TimeCampApi(
                 'apiToken',
                 'http://localhost:8080',
-                true);
+                true,
+                PouchDB);
 
             expect(true).toEqual(true);
         });
+
 
         const email = Utils.generateRandomEmail();
         const password = Utils.TEST_PASSWORD;
@@ -96,6 +99,9 @@ describe('TimeCamp', () => {
                 }
             }).timeout(10000);
         });
+
+        // timecampApi.apiCacheRequest.showAllCachedRequests();
+
 
         describe('time entries', () => {
             let newEntryId;
@@ -203,6 +209,17 @@ describe('TimeCamp', () => {
             //     // }
             // }).timeout(10000);
         });
+
+        describe('cache requests', () => {
+            it('list cached requests', async function () {
+                await timecampApi.apiCacheRequest.showAllCachedRequests();
+            }).timeout(10000);
+
+            it('resend cached requests', async function () {
+                await timecampApi.apiCacheRequest.sendAllCachedRequests();
+            }).timeout(10000);
+        });
+
 
     });
 });

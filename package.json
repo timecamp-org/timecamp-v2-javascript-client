@@ -61,7 +61,7 @@
   "dependencies": {
     "chai": "^3.5.0",
     "class-autobind": "^0.1.4",
-    "pouchdb": "^6.0.5",
+    "pouchdb": "^6.0.7",
     "pouchdb-browser": "^6.0.5",
     "string-format": "^0.5.0"
   }
