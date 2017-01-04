@@ -15,8 +15,8 @@ describe('TimeCamp', () => {
     describe('REST API', () => {
         it('exists', () => {
             timecampApi = new TimeCampApi(
-                'apiToken',
                 'http://localhost:8080',
+                'apiToken',
                 true,
                 PouchDB);
 
@@ -198,25 +198,15 @@ describe('TimeCamp', () => {
                     throw new Error(apiResponse.error.errorMessage);
                 }
             }).timeout(10000);
-
-            // it('edit existing task', async function () {
-            //     const apiResponse = await timecampApi.taskMobile.edit(newTaskId, currentUser.user_id, {note: 'trololo'});
-            //     console.log(apiResponse)
-            //     // if (!apiResponse.error) {
-            //     //     // TODO: Check if response.data fields are correct
-            //     // } else {
-            //     //     throw new Error(apiResponse.error.errorMessage);
-            //     // }
-            // }).timeout(10000);
         });
 
         describe('cache requests', () => {
-            it('list cached requests', async function () {
-                await timecampApi.apiCacheRequest.showAllCachedRequests();
-            }).timeout(10000);
+            // it('list cached requests', async function () {
+            //     await timecampApi.showAllCachedRequests();
+            // }).timeout(10000);
 
             it('resend cached requests', async function () {
-                await timecampApi.apiCacheRequest.sendAllCachedRequests();
+                await timecampApi.sendAllCachedRequests();
             }).timeout(10000);
         });
 
